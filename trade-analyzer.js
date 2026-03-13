@@ -1,6 +1,6 @@
 // trade-analyzer.js
-// One-file version with PART 1–5 integrated
-// MFE/MAE/Holding charts currently disabled to avoid canvas errors.
+// ff-trade-analyzer v0.1.0 (2026-03-13)
+// PART1–5 integrated: CSV + Stats + Symbol + Martin + SWOT + AI stub
 
 // ================== PART 1: Global + CSV + Stats + Symbol ==================
 
