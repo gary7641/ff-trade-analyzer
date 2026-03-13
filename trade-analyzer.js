@@ -1028,6 +1028,31 @@ function renderSymbolExtraCharts(symbol, trades) {
   });
 }
 
+// ---------- MFE / MAE / Holding 圖表（暫時空實作，避免錯誤） ----------
+function renderMfeMaeHoldingCharts(trades) {
+  const mfeCanvas = document.getElementById("mfeChart");
+  const maeCanvas = document.getElementById("maeChart");
+  const holdCanvas = document.getElementById("holdingChart");
+
+  // 如果 HTML 沒有這幾個 canvas，就直接退出
+  if (!mfeCanvas || !maeCanvas || !holdCanvas) {
+    return;
+  }
+
+  const mfeCtx = mfeCanvas.getContext("2d");
+  const maeCtx = maeCanvas.getContext("2d");
+  const holdCtx = holdCanvas.getContext("2d");
+
+  // 如果之前有 chart 物件，可以先安全 destroy
+  if (typeof mfeChart !== "undefined" && mfeChart) mfeChart.destroy();
+  if (typeof maeChart !== "undefined" && maeChart) maeChart.destroy();
+  if (typeof holdingChart !== "undefined" && holdingChart) holdingChart.destroy();
+
+  // 暫時唔畫任何圖，之後你想用再填入真正邏輯
+  // console.log("renderMfeMaeHoldingCharts called, but charts not implemented yet.");
+}
+
+
 // ---------- 馬丁 Table ----------
 // （PART 2 我會專門重新寫 buildMartinForSymbol + renderMartinTables）
 
