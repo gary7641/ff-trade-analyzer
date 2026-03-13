@@ -760,17 +760,21 @@ function addMiniChartCard(container, label, trades) {
 
   let cum = 0;
   const points = [];
-  trades
-    .slice()
-    .sort(
-      (a, b) =>
-        new Date(a.closeTime || a.openTime) -
-        new Date(b.closeTime || b.openTime)
-    )
-    .forEach((t) => {
-      cum += t.netProfit;
-      points.push(cum);
-    });
+trades
+  .slice()
+  .sort((a, b) => {
+    const ta = new Date(a.closeTime);
+    const tb = new Date(b.closeTime);
+    if (isNaN(ta) && isNaN(tb)) return 0;
+    if (isNaN(ta)) return -1; // 冇 closeTime 你想排前
+    if (isNaN(tb)) return 1;
+    return ta - tb;
+  })
+  .forEach((t) => {
+    cum += t.netProfit;
+    points.push(cum);
+  });
+
 
   new Chart(canvas.getContext("2d"), {
     type: "line",
@@ -812,13 +816,17 @@ function renderSymbolExtraCharts(symbol, trades) {
   if (!cumCtx || !wdProfitCtx || !wdCountCtx || !hrProfitCtx || !hrCountCtx)
     return;
 
-  const sorted = trades
-    .slice()
-    .sort(
-      (a, b) =>
-        new Date(a.closeTime || a.openTime) -
-        new Date(b.closeTime || b.openTime)
-    );
+ const sorted = trades
+  .slice()
+  .sort((a, b) => {
+    const ta = new Date(a.closeTime);
+    const tb = new Date(b.closeTime);
+    if (isNaN(ta) && isNaN(tb)) return 0;
+    if (isNaN(ta)) return -1;
+    if (isNaN(tb)) return 1;
+    return ta - tb;
+  });
+;
 
   const cumCtx2d = cumCtx.getContext("2d");
 
