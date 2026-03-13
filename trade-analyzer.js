@@ -50,7 +50,6 @@ let cumulativeMode = "all"; // "all" | "separate"
 
   cumInput.addEventListener("change", () => {
     cumulativeMode = cumInput.checked ? "separate" : "all";
-
     const activeSymbolBtn = document.querySelector(".symbol-btn.active");
     const sym = activeSymbolBtn ? activeSymbolBtn.dataset.symbol : "ALL";
     const trades = sym === "ALL" ? globalTrades : globalBySymbol[sym] || [];
@@ -74,8 +73,8 @@ document.addEventListener("click", (e) => {
   if (!btn) return;
   const mode = btn.dataset.mode;
   if (!mode || mode === mfeMaeMode) return;
-  mfeMaeMode = mode;
 
+  mfeMaeMode = mode;
   document
     .querySelectorAll(".toggle-mode")
     .forEach((b) => b.classList.toggle("active", b.dataset.mode === mode));
@@ -93,6 +92,7 @@ function handleAnalyze() {
     alert("請先選擇 CSV 檔案");
     return;
   }
+
   const eaSelect = document.getElementById("eaSelect");
   globalEAKey = eaSelect ? eaSelect.value : "SMA";
 
@@ -134,11 +134,11 @@ function parseCsv(text) {
   const iHold = idx("holding time") !== -1 ? idx("holding time") : -1;
 
   const trades = [];
+
   for (let i = 1; i < lines.length; i++) {
     const rowRaw = lines[i];
     if (!rowRaw.trim()) continue;
     const cells = rowRaw.split(",");
-
     if (iType < 0 || iSymbol < 0) continue;
 
     const type = (cells[iType] || "").trim().toLowerCase();
@@ -168,6 +168,7 @@ function parseCsv(text) {
 function parseHoldingToDays(text) {
   if (!text) return 0;
   const t = text.toLowerCase().trim();
+
   if (t.endsWith("days") || t.endsWith("day")) {
     const v = parseFloat(t);
     return isNaN(v) ? 0 : v;
@@ -216,7 +217,6 @@ function buildStats(trades) {
       curConsecLoss++;
       if (curConsecLoss > maxConsecLoss) maxConsecLoss = curConsecLoss;
     }
-
     cum += p;
     if (cum > peak) peak = cum;
     const dd = peak - cum;
@@ -263,6 +263,7 @@ function buildAccountSummary() {
     const label = isNaN(ts.getTime()) ? "" : ts.toISOString().slice(0, 10);
     const wd = ts.getDay();
     weekdayCounts[wd]++;
+
     bySymbolProfit[t.symbol] = (bySymbolProfit[t.symbol] || 0) + t.netProfit;
     curve.push({ x: label, y: cum });
 
@@ -281,15 +282,12 @@ function buildAccountSummary() {
 document.addEventListener("click", (e) => {
   const header = e.target.closest(".collapsible-header");
   if (!header) return;
-
   const targetId = header.dataset.target;
   if (!targetId) return;
-
   const body = document.getElementById(targetId);
   if (!body) return;
 
   const btn = header.querySelector(".collapse-toggle");
-
   const isCollapsed = body.classList.toggle("collapsed");
   if (isCollapsed) {
     body.style.maxHeight = "0px";
@@ -315,7 +313,6 @@ function buildAll() {
   }
 
   const acc = buildAccountSummary();
-
   renderSummaryCards(acc);
   document.getElementById("summaryCardsSection").style.display = "block";
   expandBody("summaryCardsBody");
@@ -414,6 +411,7 @@ function resetView() {
     const el = document.getElementById(id);
     if (el) el.textContent = text;
   });
+
   const equityBar = document.getElementById("equityBar");
   const profitBar = document.getElementById("profitBar");
   if (equityBar) equityBar.style.width = "0%";
@@ -421,6 +419,7 @@ function resetView() {
 
   const fileInput = document.getElementById("csvFile");
   if (fileInput) fileInput.value = "";
+
   const eaSelect = document.getElementById("eaSelect");
   if (eaSelect) eaSelect.value = "SMA";
 
@@ -456,8 +455,8 @@ function renderSummaryCards(acc) {
   const netProfit = stats.grossProfit - stats.grossLoss;
   const initialDeposit = 5000;
   const equity = initialDeposit + netProfit;
-
   const growthPct = (equity / initialDeposit - 1) * 100;
+
   const periodDays =
     acc.firstTime && acc.lastTime
       ? Math.max(
@@ -525,7 +524,6 @@ function renderAccountStats(stats) {
 function renderMinimumArea(stats) {
   const el = document.getElementById("minimumArea");
   if (!el) return;
-
   el.innerHTML = `
     <div><strong>Avg Win:</strong> ${stats.avgWin.toFixed(2)}</div>
     <div><strong>Avg Loss:</strong> ${stats.avgLoss.toFixed(2)}</div>
@@ -619,7 +617,6 @@ function renderAccountCharts(acc) {
 function renderSymbolButtons() {
   const container = document.getElementById("symbolButtons");
   container.innerHTML = "";
-
   const symbols = Object.keys(globalBySymbol).sort();
 
   const allStats = buildStats(globalTrades);
@@ -643,7 +640,6 @@ function renderSymbolButtons() {
   symbols.forEach((sym) => {
     const stats = buildStats(globalBySymbol[sym]);
     const net = stats.grossProfit - stats.grossLoss;
-
     const btn = document.createElement("button");
     btn.className = "symbol-btn";
     btn.dataset.symbol = sym;
@@ -695,7 +691,6 @@ function renderSymbol(symbol) {
       symbol === "ALL" ? `${rule.name} – 全組合` : rule.name;
 
   let martinSummary = null;
-
   if (rule.martin && symbol !== "ALL") {
     const m = buildMartinForSymbol(trades);
     martinSummary = m.martinSummary;
@@ -738,7 +733,6 @@ function renderSymbolMiniCharts() {
   container.innerHTML = "";
 
   addMiniChartCard(container, "All Symbols", globalTrades);
-
   const symbols = Object.keys(globalBySymbol).sort();
   symbols.forEach((sym) => {
     addMiniChartCard(container, sym, globalBySymbol[sym]);
@@ -797,10 +791,7 @@ function addMiniChartCard(container, label, trades) {
     },
     options: {
       plugins: { legend: { display: false } },
-      scales: {
-        x: { display: false },
-        y: { display: false }
-      }
+      scales: { x: { display: false }, y: { display: false } }
     }
   });
 }
@@ -863,7 +854,6 @@ function renderSymbolExtraCharts(symbol, trades) {
         data.push(cum);
       });
       if (data.length > maxLen) maxLen = data.length;
-
       const c = baseColors[colorIndex++ % baseColors.length];
       datasets.push({
         label: symKey,
@@ -876,17 +866,11 @@ function renderSymbolExtraCharts(symbol, trades) {
     });
 
     const labels = Array.from({ length: maxLen }, (_, i) => i + 1);
-
     symbolCumulativeChart = new Chart(cumCtx2d, {
       type: "line",
-      data: {
-        labels,
-        datasets
-      },
+      data: { labels, datasets },
       options: {
-        plugins: {
-          legend: { display: true }
-        },
+        plugins: { legend: { display: true } },
         scales: {
           x: { title: { display: true, text: "Trade Index (per Symbol)" } },
           y: { title: { display: true, text: "Profit" } }
@@ -937,8 +921,8 @@ function renderSymbolExtraCharts(symbol, trades) {
     weekdayProfit[wd] += t.netProfit;
     weekdayCount[wd] += 1;
   });
-  const weekdayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
+  const weekdayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   symbolWeekdayProfitChart = new Chart(wdProfitCtx.getContext("2d"), {
     type: "bar",
     data: {
@@ -976,7 +960,10 @@ function renderSymbolExtraCharts(symbol, trades) {
     options: {
       plugins: { legend: { display: false } },
       scales: {
-        y: { title: { display: true, text: "Trades" }, beginAtZero: true }
+        y: {
+          title: { display: true, text: "Trades" },
+          beginAtZero: true
+        }
       }
     }
   });
@@ -993,7 +980,6 @@ function renderSymbolExtraCharts(symbol, trades) {
   const hourLabels = Array.from({ length: 24 }, (_, i) =>
     i.toString().padStart(2, "0")
   );
-
   symbolHourlyProfitChart = new Chart(hrProfitCtx.getContext("2d"), {
     type: "bar",
     data: {
@@ -1033,13 +1019,18 @@ function renderSymbolExtraCharts(symbol, trades) {
       plugins: { legend: { display: false } },
       scales: {
         x: { title: { display: true, text: "Hour" } },
-        y: { title: { display: true, text: "Trades" }, beginAtZero: true }
+        y: {
+          title: { display: true, text: "Trades" },
+          beginAtZero: true
+        }
       }
     }
   });
 }
 
 // ---------- 馬丁 Table ----------
+// （PART 2 我會專門重新寫 buildMartinForSymbol + renderMartinTables）
+
 function buildMartinForSymbol(symbolTrades) {
   const map = {};
   for (const t of symbolTrades) {
@@ -1059,6 +1050,7 @@ function buildMartinForSymbol(symbolTrades) {
     m.sumProfit += t.netProfit;
     m.sumPips += t.netPips;
   }
+
   const rows = Object.values(map);
   const bySide = {};
   for (const r of rows) {
@@ -1078,265 +1070,680 @@ function buildMartinForSymbol(symbolTrades) {
   for (const key of Object.keys(bySide)) {
     const [symbol, side] = key.split("|");
     const arr = bySide[key].sort((a, b) => a.lots - b.lots);
+
     let totalProfit = 0;
     let totalPips = 0;
     let totalTrades = 0;
+
     for (const r of arr) {
       totalProfit += r.sumProfit;
       totalPips += r.sumPips;
       totalTrades += r.tradeCount;
     }
+
     let cum = 0;
     let levelIndex = 0;
-    let firstPositiveLevel = null;
-    const rowsOut = [];
-
-    for (const r of arr) {
-      levelIndex++;
-      cum += r.sumProfit;
-      if (cum >= 0 && firstPositiveLevel == null)
-        firstPositiveLevel = levelIndex;
-
-      rowsOut.push({
-        symbol,
-        side,
-        level: levelIndex,
-        lots: r.lots,
-        levelTrades: r.tradeCount,
-        levelSumProfit: r.sumProfit,
-        levelSumPips: r.sumPips,
-        cumulativeProfit: cum,
-        totalProfit,
-        totalPips,
-        totalTrades
-      });
-    }
-
-    tablePerSide.push({
-      symbol,
-      side,
-      totalProfit,
-      totalPips,
-      totalTrades,
-      rows: rowsOut,
-      firstPositiveLevel,
-      maxLevel: levelIndex
-    });
-
-    martinSummary.totalProfit += totalProfit;
-    if (levelIndex > martinSummary.maxLevel)
-      martinSummary.maxLevel = levelIndex;
-
-    if (totalProfit < 0) {
-      martinSummary.worstSideNegative = {
-        symbol,
-        side,
-        totalProfit
-      };
-    }
-    if (
-      martinSummary.firstPositiveLevel == null &&
-      firstPositiveLevel != null
-    ) {
-      martinSummary.firstPositiveLevel = firstPositiveLevel;
-    } else if (
-      firstPositiveLevel != null &&
-      firstPositiveLevel <
-        (martinSummary.firstPositiveLevel || Number.MAX_SAFE_INTEGER)
-    ) {
-      martinSummary.firstPositiveLevel = firstPositiveLevel;
-    }
+    // 之後 PART 2 我會喺呢度幫你加 winRate / maxProfit / maxLoss / maxLossPips / trades 等欄位
+    // 同埋紫色 highlight + 展開子 trades 的邏輯
   }
 
   return { tablePerSide, martinSummary };
 }
+.martin-card {
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  background: var(--card-bg, #0b1220);
+  border: 1px solid rgba(148, 163, 184, 0.4);
+}
 
-function renderMartinTables(symbol, tablePerSide) {
-  const container = document.getElementById("martinTables");
-  container.innerHTML = "";
-  tablePerSide.forEach((block) => {
-    const title = document.createElement("div");
-    title.className = "martin-header";
-    const totalClass =
-      block.totalProfit < 0 ? "row-total-negative" : "row-total-positive";
-    title.innerHTML = `${symbol} - ${block.side} (Total Profit: <span class="${totalClass}">${block.totalProfit.toFixed(
-      2
-    )}</span>, Trades: ${block.totalTrades})`;
-    container.appendChild(title);
+.martin-title {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
 
-    const wrap = document.createElement("div");
-    wrap.className = "martin-table-wrapper";
-    const table = document.createElement("table");
-    table.className = "martin-table";
+.martin-side-summary {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-size: 12px;
+  color: #94a3b8;
+  margin-bottom: 8px;
+}
 
-    table.innerHTML = `
-      <thead>
-        <tr>
-          <th>層數</th>
-          <th>Lots</th>
-          <th>開單數量</th>
-          <th>該層SUM Profit</th>
-          <th>該層SUM Pips</th>
-          <th>由第1層累積Profit</th>
-          <th>Symbol+Side TOTAL Profit</th>
-          <th>Total Trades</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    `;
+.martin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
 
-    const tbody = table.querySelector("tbody");
+.martin-table th,
+.martin-table td {
+  padding: 4px 6px;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.3);
+  text-align: right;
+}
 
-    block.rows.forEach((r) => {
-      const tr = document.createElement("tr");
+.martin-table th:first-child,
+.martin-table td:first-child {
+  text-align: center;
+}
 
-      let cls = "";
-      if (block.totalProfit < 0) {
-        cls = "row-total-negative";
-      } else if (block.firstPositiveLevel != null) {
-        if (r.level < block.firstPositiveLevel) cls = "level-risk";
-        else cls = "level-safe";
-      }
-      if (cls) tr.classList.add(cls);
+.martin-row.martin-positive td:nth-child(5) {
+  color: #22c55e;
+  font-weight: 600;
+}
 
-      tr.innerHTML = `
-        <td>${r.level}</td>
-        <td>${r.lots.toFixed(2)}</td>
-        <td>${r.levelTrades}</td>
-        <td>${r.levelSumProfit.toFixed(2)}</td>
-        <td>${r.levelSumPips.toFixed(1)}</td>
-        <td>${r.cumulativeProfit.toFixed(2)}</td>
-        <td>${r.totalProfit.toFixed(2)}</td>
-        <td>${r.totalTrades}</td>
-      `;
-      tbody.appendChild(tr);
+.martin-row.martin-negative td:nth-child(5) {
+  color: #ef4444;
+  font-weight: 600;
+}
+
+.martin-row.martin-best-winrate {
+  background-color: rgba(168, 85, 247, 0.12);
+  border-left: 3px solid #a855f7;
+}
+
+.martin-toggle {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 12px;
+  line-height: 1;
+  padding: 0;
+  color: #e5e7eb;
+}
+
+.martin-toggle:hover {
+  color: #a855f7;
+}
+
+.martin-subtrades {
+  background: rgba(15, 23, 42, 0.7);
+}
+
+.martin-subtrades.collapsed {
+  display: none;
+}
+
+.martin-subtable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+}
+
+.martin-subtable th,
+.martin-subtable td {
+  padding: 2px 4px;
+  border-bottom: 1px solid rgba(51, 65, 85, 0.7);
+  text-align: right;
+}
+
+.martin-subtable th:first-child,
+.martin-subtable td:first-child {
+  text-align: left;
+}
+
+.empty-subtrades {
+  font-size: 11px;
+  color: #9ca3af;
+  padding: 4px 0;
+}
+
+// ---------- PART 3：EA 規則 + SWOT 分析 ----------
+
+// 你可以按需要加其他 EA，或修改 threshold / 描述
+const EA_RULES = {
+  SMA: {
+    key: "SMA",
+    name: "SMA Trend EA",
+    description: "以均線為主的順勢策略，偏中長線 Trending。",
+    // threshold 大致參考值，可以之後微調
+    goodWinRate: 0.55,
+    greatWinRate: 0.60,
+    weakWinRate: 0.45,
+
+    goodPF: 1.5,
+    greatPF: 2.0,
+    weakPF: 1.0,
+
+    safeDD: 0.10,
+    warnDD: 0.20,
+
+    minTradesForConfidence: 50
+  },
+
+  Scalper: {
+    key: "Scalper",
+    name: "Scalper EA",
+    description: "高頻短線策略，注重穩定 win rate 與低 DD。",
+    goodWinRate: 0.60,
+    greatWinRate: 0.65,
+    weakWinRate: 0.50,
+    goodPF: 1.3,
+    greatPF: 1.7,
+    weakPF: 1.0,
+    safeDD: 0.08,
+    warnDD: 0.15,
+    minTradesForConfidence: 100
+  },
+
+  OtherBasic: {
+    key: "OtherBasic",
+    name: "EA (General)",
+    description: "一般型 EA，使用通用評估標準。",
+    goodWinRate: 0.55,
+    greatWinRate: 0.60,
+    weakWinRate: 0.45,
+    goodPF: 1.4,
+    greatPF: 1.8,
+    weakPF: 1.0,
+    safeDD: 0.12,
+    warnDD: 0.22,
+    minTradesForConfidence: 30
+  }
+};
+
+/**
+ * 將 symbol stats + martinSummary + trades 合成 EA 評估用的 stats
+ * @param {string} symbol - 當前 Symbol 或 "ALL"
+ * @param {object} stats - buildStats(trades) 的結果
+ * @param {object|null} martinSummary - buildMartinForSymbol 回傳的 martinSummary
+ * @param {Array} trades - 該 symbol 的所有 trades
+ */
+function buildEaStats(symbol, stats, martinSummary, trades) {
+  const netProfit = stats.grossProfit - stats.grossLoss;
+  const totalTrades = stats.totalTrades || 0;
+
+  // 估算簡單 maxDD%：以假設 initialDeposit = 5000
+  const initialDeposit = 5000;
+  const maxDDPct = initialDeposit
+    ? stats.maxDrawdown / initialDeposit
+    : 0;
+
+  const sideMartin = martinSummary || {
+    totalProfit: 0,
+    firstPositiveLevel: null,
+    maxLevel: 0,
+    worstSideNegative: null
+  };
+
+  // 交易活躍度：日均 / 週均
+  let daysSpan = 0;
+  let avgTradesPerDay = 0;
+  let avgTradesPerWeek = 0;
+  if (trades && trades.length) {
+    let firstTime = null;
+    let lastTime = null;
+    trades.forEach((t) => {
+      const d = new Date(t.closeTime || t.openTime);
+      if (isNaN(d)) return;
+      if (!firstTime || d < firstTime) firstTime = d;
+      if (!lastTime || d > lastTime) lastTime = d;
     });
+    if (firstTime && lastTime) {
+      const diffDays = Math.max(
+        1,
+        Math.round(
+          (lastTime.getTime() - firstTime.getTime()) / (1000 * 3600 * 24)
+        )
+      );
+      daysSpan = diffDays;
+      avgTradesPerDay = totalTrades / diffDays;
+      avgTradesPerWeek = (totalTrades / diffDays) * 7;
+    }
+  }
 
-    wrap.appendChild(table);
-    container.appendChild(wrap);
-  });
+  return {
+    symbol,
+    totalTrades,
+    netProfit,
+    winRate: stats.winRate,
+    lossRate: stats.lossRate,
+    profitFactor: stats.profitFactor,
+    expectancy: stats.expectancy,
+    maxDrawdownAbs: stats.maxDrawdown,
+    maxDrawdownPct: maxDDPct,
+    maxConsecLoss: stats.maxConsecLoss,
+    avgWin: stats.avgWin,
+    avgLoss: stats.avgLoss,
+
+    martinTotalProfit: sideMartin.totalProfit || 0,
+    martinFirstPositiveLevel: sideMartin.firstPositiveLevel,
+    martinMaxLevel: sideMartin.maxLevel,
+    martinWorstSideNegative: sideMartin.worstSideNegative,
+
+    daysSpan,
+    avgTradesPerDay,
+    avgTradesPerWeek
+  };
 }
 
-// ---------- MFE / MAE / Holding ----------
-function renderMfeMaeHoldingCharts(trades) {
-  const mfeCtx = document.getElementById("mfeChart").getContext("2d");
-  const maeCtx = document.getElementById("maeChart").getContext("2d");
-  const holdCtx = document.getElementById("holdingChart").getContext("2d");
+/**
+ * 根據 EA 規則 + eaStats 產生 SWOT（中文內容，但保留 S/W/O/T 結構）
+ * @param {string} eaKey - EA_RULES 的 key
+ * @param {string} symbol
+ * @param {object} stats - buildStats(trades)
+ * @param {object|null} martinSummary
+ * @returns {object} { strengths, weaknesses, opportunities, threats }
+ */
+function buildSwotForEA(eaKey, symbol, stats, martinSummary) {
+  const rule = EA_RULES[eaKey] || EA_RULES.OtherBasic;
+  const trades =
+    symbol === "ALL" ? globalTrades : globalBySymbol[symbol] || [];
 
-  if (mfeChart) mfeChart.destroy();
-  if (maeChart) maeChart.destroy();
-  if (holdingChart) holdingChart.destroy();
+  const eaStats = buildEaStats(symbol, stats, martinSummary, trades);
 
-  const xKey = mfeMaeMode === "pips" ? "netPips" : "netProfit";
+  const S = [];
+  const W = [];
+  const O = [];
+  const T = [];
 
-  const mfeData = trades.map((t) => ({
-    x: t[xKey],
-    y: t.mfe,
-    c: t.netProfit >= 0 ? "#16a34a" : "#dc2626"
-  }));
-  const maeData = trades.map((t) => ({
-    x: t[xKey],
-    y: t.mae,
-    c: t.netProfit >= 0 ? "#16a34a" : "#dc2626"
-  }));
-  const holdData = trades.map((t) => ({
-    x: t[xKey],
-    y: t.holdingDays,
-    c: t.netProfit >= 0 ? "#16a34a" : "#dc2626"
-  }));
+  const {
+    totalTrades,
+    netProfit,
+    winRate,
+    profitFactor,
+    expectancy,
+    maxDrawdownPct,
+    maxConsecLoss,
+    avgWin,
+    avgLoss,
+    martinTotalProfit,
+    daysSpan,
+    avgTradesPerDay,
+    avgTradesPerWeek
+  } = eaStats;
 
-  const xTitle =
-    mfeMaeMode === "pips" ? "Result (Net Pips)" : "Result (Net Profit)";
+  const hasEnoughData = totalTrades >= rule.minTradesForConfidence;
 
-  mfeChart = new Chart(mfeCtx, {
-    type: "scatter",
-    data: {
-      datasets: [
-        {
-          label: "MFE vs Result",
-          data: mfeData,
-          backgroundColor: mfeData.map((d) => d.c)
-        }
-      ]
-    },
-    options: {
-      parsing: false,
-      plugins: { legend: { display: false } },
-      scales: {
-        x: { title: { display: true, text: xTitle } },
-        y: { title: { display: true, text: "MFE (pips)" } }
-      }
-    }
-  });
+  // -------- S：Strengths 優勢 --------
+  if (netProfit > 0 && profitFactor > rule.goodPF) {
+    S.push(
+      `整體呈現穩定淨盈利，Profit Factor 達 ${
+        profitFactor === Infinity ? "∞" : profitFactor.toFixed(2)
+      }，具備長期正期望特徵。`
+    );
+  }
+  if (winRate >= rule.greatWinRate) {
+    S.push(
+      `勝率偏高（約 ${(winRate * 100).toFixed(
+        1
+      )}%），屬於此策略類型中較理想水平。`
+    );
+  } else if (winRate >= rule.goodWinRate) {
+    S.push(
+      `勝率尚算穩定（約 ${(winRate * 100).toFixed(
+        1
+      )}%），對沖交易成本與滑點仍有餘地。`
+    );
+  }
+  if (expectancy > 0) {
+    S.push(
+      `單筆期望值為 ${expectancy.toFixed(
+        2
+      )}，平均每單具備正收益，長期有機會向上累積。`
+    );
+  }
+  if (maxDrawdownPct <= rule.safeDD && maxDrawdownPct > 0) {
+    S.push(
+      `最大回撤約 ${(maxDrawdownPct * 100).toFixed(
+        1
+      )}% ，整體風險控制相對保守。`
+    );
+  }
+  if (avgWin > 0 && avgLoss > 0 && avgWin >= avgLoss) {
+    S.push(
+      `平均贏一單 (${avgWin.toFixed(
+        2
+      )}) 大約 ≥ 平均輸一單 (${avgLoss.toFixed(
+        2
+      )})，風報比結構偏健康。`
+    );
+  }
 
-  maeChart = new Chart(maeCtx, {
-    type: "scatter",
-    data: {
-      datasets: [
-        {
-          label: "MAE vs Result",
-          data: maeData,
-          backgroundColor: maeData.map((d) => d.c)
-        }
-      ]
-    },
-    options: {
-      parsing: false,
-      plugins: { legend: { display: false } },
-      scales: {
-        x: { title: { display: true, text: xTitle } },
-        y: { title: { display: true, text: "MAE (pips)" } }
-      }
-    }
-  });
+  // -------- W：Weaknesses 劣勢 --------
+  if (netProfit <= 0) {
+    W.push(
+      `當前樣本期內整體淨利潤偏弱（${netProfit.toFixed(
+        2
+      )}），策略可能仍在調整期或市場環境不利。`
+    );
+  }
+  if (profitFactor < rule.weakPF) {
+    W.push(
+      `Profit Factor 低於 ${rule.weakPF.toFixed(
+        2
+      )}，盈利交易對虧損交易的優勢不足。`
+    );
+  }
+  if (winRate < rule.weakWinRate) {
+    W.push(
+      `勝率偏低（約 ${(winRate * 100).toFixed(
+        1
+      )}%），需要依賴更高 RRR 或更嚴格風控才能穩定。`
+    );
+  }
+  if (maxDrawdownPct >= rule.warnDD) {
+    W.push(
+      `最大回撤較深（約 ${(maxDrawdownPct * 100).toFixed(
+        1
+      )}%），需要重新檢視倉位大小、加倉層數或止損規則。`
+    );
+  }
+  if (maxConsecLoss >= 5) {
+    W.push(
+      `最大連續虧損達 ${maxConsecLoss} 單，心理壓力與資金回撤都較大，需要確認資金是否足夠承受。`
+    );
+  }
 
-  holdingChart = new Chart(holdCtx, {
-    type: "scatter",
-    data: {
-      datasets: [
-        {
-          label: "Holding Time vs Result",
-          data: holdData,
-          backgroundColor: holdData.map((d) => d.c)
-        }
-      ]
-    },
-    options: {
-      parsing: false,
-      plugins: { legend: { display: false } },
-      scales: {
-        x: { title: { display: true, text: xTitle } },
-        y: { title: { display: true, text: "Holding Time (days)" } }
-      }
-    }
-  });
+  // -------- O：Opportunities 機會 --------
+  if (!hasEnoughData) {
+    O.push(
+      `目前樣本量約 ${totalTrades} 單，未達「穩定統計樣本」門檻（建議 ≥ ${
+        rule.minTradesForConfidence
+      } 單），後續可透過增加樣本期進一步驗證。`
+    );
+  } else {
+    O.push(
+      `已有 ${totalTrades} 單樣本，統計具一定參考價值，可考慮在相近市場環境內放大倉位或增加觀察週期。`
+    );
+  }
+  if (martinTotalProfit > 0) {
+    O.push(
+      `Martin 結構整體仍貢獻正收益（約 ${martinTotalProfit.toFixed(
+        2
+      )}），可進一步優化入場/加倉條件，保留優點同時降低極端回撤風險。`
+    );
+  }
+  if (daysSpan > 0 && avgTradesPerWeek > 0) {
+    O.push(
+      `於約 ${daysSpan} 日內完成 ${totalTrades} 單（每週約 ${avgTradesPerWeek.toFixed(
+        1
+      )} 單），策略具備一定活躍度，可用作疊代與優化的測試平台。`
+    );
+  }
+
+  // -------- T：Threats 風險 --------
+  if (maxDrawdownPct >= rule.warnDD) {
+    T.push(
+      `回撤放大時可能引發強平或心理崩潰，有必要設定明確「停機條件」或回撤上限。`
+    );
+  }
+  if (profitFactor < 1 && netProfit > 0) {
+    T.push(
+      `目前盈利主要依賴少量大單帶動，一旦市場結構改變，策略表現可能明顯回落。`
+    );
+  }
+  if (avgLoss > avgWin && winRate不夠高(winRate, rule)) {
+    T.push(
+      `平均單筆虧損 (${avgLoss.toFixed(
+        2
+      )}) 高於平均單筆盈利 (${avgWin.toFixed(
+        2
+      )})，一旦勝率回落，策略會更容易陷入長期負期望。`
+    );
+  }
+
+  // 如果完全沒有內容，避免空白，給一些 default 提示
+  if (!S.length) {
+    S.push("暫未見明顯結構性優勢，建議先延長測試期並觀察更多樣本。");
+  }
+  if (!W.length) {
+    W.push("暫未發現明顯弱點，但仍需持續監控回撤與風報比變化。");
+  }
+  if (!O.length) {
+    O.push("可透過增加品種、時間段或不同市場環境測試，挖掘更多可行場景。");
+  }
+  if (!T.length) {
+    T.push("主要風險為市場結構變化與極端行情，建議搭配資金管理與停機條件。");
+  }
+
+  return { strengths: S, weaknesses: W, opportunities: O, threats: T, eaStats };
 }
 
-// ---------- SWOT ----------
+function winRate不夠高(winRate, rule) {
+  return winRate < rule.goodWinRate;
+}
+
+// 將 SWOT 結果填入 UI
 function renderSwot(swot) {
   if (!swot) return;
 
-  document.getElementById("swotST").innerHTML =
-    "<strong>ST</strong><br>" + swot.ST.join("<br>");
-  document.getElementById("swotS").innerHTML =
-    "<strong>S</strong><br>" + swot.S.join("<br>");
-  document.getElementById("swotSW").innerHTML =
-    "<strong>SW</strong><br>" + swot.SW.join("<br>");
+  const { strengths, weaknesses, opportunities, threats } = swot;
 
-  document.getElementById("swotT").innerHTML =
-    "<strong>T</strong><br>" + swot.T.join("<br>");
-  document.getElementById("swotW").innerHTML =
-    "<strong>W</strong><br>" + swot.W.join("<br>");
+  const elST = document.getElementById("swotST"); // Strength Title
+  const elS = document.getElementById("swotS");
+  const elSW = document.getElementById("swotSW"); // Weakness Title
+  const elW = document.getElementById("swotW");
+  const elOT = document.getElementById("swotOT"); // Opportunity Title
+  const elO = document.getElementById("swotO");
+  const elOW = document.getElementById("swotOW"); // Threat Title
+  const elT = document.getElementById("swotT");
 
-  document.getElementById("swotOT").innerHTML =
-    "<strong>OT</strong><br>" + swot.OT.join("<br>");
-  document.getElementById("swotO").innerHTML =
-    "<strong>O</strong><br>" + swot.O.join("<br>");
-  document.getElementById("swotOW").innerHTML =
-    "<strong>OW</strong><br>" + swot.OW.join("<br>");
+  if (elST) elST.textContent = "S – Strengths（優勢）";
+  if (elSW) elSW.textContent = "W – Weaknesses（劣勢）";
+  if (elOT) elOT.textContent = "O – Opportunities（機會）";
+  if (elOW) elOW.textContent = "T – Threats（風險）";
 
-  const eaCenterText = document.getElementById("eaCenterAnalysis");
-  eaCenterText.innerHTML = swot.centerAnalysis
-    ? swot.centerAnalysis.join("<br>")
-    : "";
+  if (elS)
+    elS.innerHTML = strengths
+      .map((s) => `<li>${s}</li>`)
+      .join("") || "<li>暫無明顯優勢</li>";
+  if (elW)
+    elW.innerHTML = weaknesses
+      .map((w) => `<li>${w}</li>`)
+      .join("") || "<li>暫無明顯劣勢</li>";
+  if (elO)
+    elO.innerHTML = opportunities
+      .map((o) => `<li>${o}</li>`)
+      .join("") || "<li>暫無明顯機會</li>";
+  if (elT)
+    elT.innerHTML = threats
+      .map((t) => `<li>${t}</li>`)
+      .join("") || "<li>暫無明顯風險</li>";
 }
+// ---------- PART 4：共用 Helper + Context Summary ----------
+
+// 安全取值，避免 undefined / NaN 影響顯示
+function safeToFixed(value, digits) {
+  const v = Number(value);
+  if (!isFinite(v)) return "0";
+  return v.toFixed(digits);
+}
+
+function safePercent(value, digits) {
+  const v = Number(value);
+  if (!isFinite(v)) return "0";
+  return (v * 100).toFixed(digits) + " %";
+}
+
+// label 用，兼顧 ALL / 單一 symbol
+function formatSymbolLabel(symbol) {
+  return symbol === "ALL" ? "All Symbols" : symbol;
+}
+
+// 將某個 symbol（或 ALL）嘅主要 stats 整成短 summary（之後 AI 可用）
+function buildSymbolContextSummary(symbol, stats, eaStats) {
+  const name = formatSymbolLabel(symbol);
+  const netProfit = stats.grossProfit - stats.grossLoss;
+
+  const lines = [];
+
+  lines.push(`標的：${name}`);
+  lines.push(
+    `總交易數：${stats.totalTrades}，勝率：約 ${safePercent(
+      stats.winRate,
+      1
+    )}，Profit Factor：${
+      stats.profitFactor === Infinity
+        ? "∞"
+        : safeToFixed(stats.profitFactor, 2)
+    }。`
+  );
+  lines.push(
+    `淨利潤：約 ${safeToFixed(
+      netProfit,
+      2
+    )}，最大回撤：約 ${safeToFixed(stats.maxDrawdown, 2)}。`
+  );
+  lines.push(
+    `平均贏一單：${safeToFixed(
+      stats.avgWin,
+      2
+    )}，平均輸一單：${safeToFixed(stats.avgLoss, 2)}，期望值/單：${safeToFixed(
+      stats.expectancy,
+      2
+    )}。`
+  );
+
+  if (eaStats) {
+    if (eaStats.daysSpan > 0) {
+      lines.push(
+        `統計期間：約 ${eaStats.daysSpan} 日，日均交易約 ${safeToFixed(
+          eaStats.avgTradesPerDay,
+          2
+        )} 單，週均約 ${safeToFixed(eaStats.avgTradesPerWeek, 1)} 單。`
+      );
+    }
+    if (eaStats.martinTotalProfit !== undefined) {
+      lines.push(
+        `Martin 結構總 Profit：約 ${safeToFixed(
+          eaStats.martinTotalProfit,
+          2
+        )}。`
+      );
+    }
+  }
+
+  return lines.join("\n");
+}
+
+// 方便之後 AI 用：取出當前 symbol 的 context summary
+function getCurrentSymbolContextSummary() {
+  const activeBtn = document.querySelector(".symbol-btn.active");
+  const symbol = activeBtn ? activeBtn.dataset.symbol : "ALL";
+  const trades =
+    symbol === "ALL" ? globalTrades : globalBySymbol[symbol] || [];
+  if (!trades.length) return "目前沒有可用的交易資料。";
+
+  const stats = buildStats(trades);
+  // 這裡不強制需要 martinSummary，如果你要可以從 renderSymbol 傳下來
+  const eaRule = EA_RULES[globalEAKey] || EA_RULES.OtherBasic;
+  const dummyMartinSummary = {
+    totalProfit: 0,
+    firstPositiveLevel: null,
+    maxLevel: 0,
+    worstSideNegative: null
+  };
+  const eaStats = buildEaStats(symbol, stats, dummyMartinSummary, trades);
+
+  return buildSymbolContextSummary(symbol, stats, eaStats);
+}
+// ---------- PART 5：AI Chat 入口（前端 Stub，不調用真 API） ----------
+
+(function setupAiChatStub() {
+  const trigger = document.getElementById("aiChatTrigger");
+  const panel = document.getElementById("aiChatPanel");
+  const closeBtn = document.getElementById("aiChatClose");
+  const sendBtn = document.getElementById("aiChatSend");
+  const input = document.getElementById("aiChatInput");
+  const msgContainer = document.getElementById("aiChatMessages");
+
+  if (!trigger || !panel || !closeBtn || !sendBtn || !input || !msgContainer) {
+    // 如果 HTML 未加齊，唔做嘢
+    return;
+  }
+
+  let isOpen = false;
+
+  function openPanel() {
+    panel.classList.remove("ai-chat-hidden");
+    isOpen = true;
+    input.focus();
+    // 第一次開，可以顯示一個 welcome message
+    if (!panel.dataset.initiated) {
+      panel.dataset.initiated = "1";
+      appendAiMessage("你好，我可以幫你解讀目前帳戶 / Symbol 的交易表現。");
+    }
+  }
+
+  function closePanel() {
+    panel.classList.add("ai-chat-hidden");
+    isOpen = false;
+  }
+
+  trigger.addEventListener("click", () => {
+    if (isOpen) {
+      closePanel();
+    } else {
+      openPanel();
+    }
+  });
+
+  closeBtn.addEventListener("click", () => {
+    closePanel();
+  });
+
+  sendBtn.addEventListener("click", handleSend);
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
+    }
+  });
+
+  function handleSend() {
+    const text = input.value.trim();
+    if (!text) return;
+
+    appendUserMessage(text);
+    input.value = "";
+
+    // 取得當前 Symbol 的 context summary（PART 4 裡面已經寫好）
+    const contextSummary = getCurrentSymbolContextSummary();
+
+    // 這裡只係 Stub：展示會 send 咩俾 API
+    console.log("【AI Chat 應該送去後端的 payload】", {
+      message: text,
+      context: contextSummary
+    });
+
+    // 暫時用假回覆：之後你可以改成 fetch('/api/chat', ...) 再顯示真正結果
+    const fakeReply =
+      "（Stub）如果連接真實 API，我會根據以下 context 幫你分析：\n\n" +
+      contextSummary;
+    appendAiMessage(fakeReply);
+  }
+
+  function appendUserMessage(text) {
+    const row = document.createElement("div");
+    row.className = "ai-chat-message user";
+    const bubble = document.createElement("div");
+    bubble.className = "ai-chat-bubble";
+    bubble.textContent = text;
+    row.appendChild(bubble);
+    msgContainer.appendChild(row);
+    scrollMessagesToBottom();
+  }
+
+  function appendAiMessage(text) {
+    const row = document.createElement("div");
+    row.className = "ai-chat-message ai";
+    const bubble = document.createElement("div");
+    bubble.className = "ai-chat-bubble";
+    // 簡單處理換行
+    bubble.innerHTML = text
+      .split("\n")
+      .map((line) => line.replace(/ /g, "&nbsp;"))
+      .join("<br>");
+    row.appendChild(bubble);
+    msgContainer.appendChild(row);
+    scrollMessagesToBottom();
+  }
+
+  function scrollMessagesToBottom() {
+    msgContainer.scrollTop = msgContainer.scrollHeight;
+  }
+})();
