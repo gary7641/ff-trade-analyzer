@@ -48,12 +48,12 @@
   <!-- 快速導航 NAV MENU -->
   <nav class="section-nav">
     <a href="#section-upload">📂 匯入</a>
-    <a href="#section-summary">📊 總覽</a>
-    <a href="#section-account">📈 帳戶分析</a>
-    <a href="#section-symbol">💱 Symbol</a>
-    <a href="#section-symbol-detail">🔍 深入分析</a>
-    <a href="#section-martin">🔢 馬丁</a>
-    <a href="#section-swot">🧠 SWOT</a>
+    <a href="#summaryCardsSection">📊 總覽</a>
+    <a href="#accountSection">📈 帳戶分析</a>
+    <a href="#symbolSection">💱 Symbol</a>
+    <a href="#symbolDetailSection">🔍 深入分析</a>
+    <a href="#martinSection">🔢 馬丁</a>
+    <a href="#swotSection">🧠 SWOT</a>
   </nav>
 
   <!-- 1. 匯入 MT4/MT5 報表 CSV -->
@@ -92,7 +92,7 @@
   </section>
 
   <!-- 2. 帳戶總覽 Summary -->
-  <section class="panel" id="section-summary" style="display:none">
+  <section class="panel" id="summaryCardsSection" style="display:none">
     <h2 class="panel-title collapsible-title" data-target="summaryCardsBody">2. 帳戶總覽 Summary <span class="toggle-icon">－</span></h2>
     <div id="summaryCardsBody">
       <div id="eaCenterAnalysis">
@@ -100,10 +100,6 @@
         <div class="growth-block">
           <div id="growthValue">0 %</div>
           <div id="growthPeriod"></div>
-        </div>
-        <div class="radar-row">
-          <span class="radar-item">Algo</span>
-          <span class="radar-item">EA Radar</span>
         </div>
         <div class="radar-labels">
           <span id="radarProfitTrades"> 勝率 </span>
@@ -116,8 +112,6 @@
 
       <h3>Equity / Profit</h3>
       <p>Initial Deposit <span id="initialDepositValue">0.00</span></p>
-      <p>Equity</p>
-      <p>Profit</p>
       <p>Equity <span id="equityValue">0.00</span></p>
       <p>Profit <span id="profitValue">0.00</span></p>
       <div id="equityBar"></div>
@@ -133,7 +127,7 @@
   </section>
 
   <!-- 3. 帳戶總體分析 -->
-  <section class="panel" id="section-account" style="display:none">
+  <section class="panel" id="accountSection" style="display:none">
     <h2 class="panel-title collapsible-title" data-target="accountBody">3. 帳戶總體分析 <span class="toggle-icon">－</span></h2>
     <div id="accountBody">
       <h3>帳戶統計</h3>
@@ -148,7 +142,7 @@
   </section>
 
   <!-- 4. Symbol 一覽與 Mini Equity -->
-  <section class="panel" id="section-symbol" style="display:none">
+  <section class="panel" id="symbolSection" style="display:none">
     <h2 class="panel-title collapsible-title" data-target="symbolBody">4. Symbol 一覽與 Mini Equity <span class="toggle-icon">－</span></h2>
     <div id="symbolBody">
       <h3>Symbols</h3>
@@ -159,14 +153,15 @@
   </section>
 
   <!-- 5. Symbol 深入分析 -->
-  <section class="panel" id="section-symbol-detail" style="display:none">
+  <section class="panel" id="symbolDetailSection" style="display:none">
     <h2 class="panel-title collapsible-title" data-target="symbolDetailBody">5. Symbol 深入分析 📊 <span class="toggle-icon">－</span></h2>
     <div id="symbolDetailBody">
       <div id="symbolTitle"></div>
       <div id="symbolStats"></div>
 
-      <span class="radar-item">EA</span>
-      All <input type="checkbox" id="cumSwitch2" /> Separate
+      <div id="cumSwitchWrapper2">
+        All <input type="checkbox" id="cumSwitch2" /> Separate
+      </div>
 
       <h3>Cumulative Profit</h3>
       <canvas id="symbolCumulativeChart"></canvas>
@@ -182,37 +177,33 @@
   </section>
 
   <!-- 6. 馬丁層數分析 -->
-  <section class="panel" id="section-martin" style="display:none">
+  <section class="panel" id="martinSection" style="display:none">
     <h2 class="panel-title collapsible-title" data-target="martinBody">6. 馬丁層數分析 <span class="toggle-icon">－</span></h2>
     <div id="martinBody">
-      <div id="martinSection">
-        <div id="martinTables"></div>
-      </div>
+      <div id="martinTables"></div>
     </div>
   </section>
 
   <!-- 7. EA SWOT 分析 -->
-  <section class="panel" id="section-swot" style="display:none">
+  <section class="panel" id="swotSection" style="display:none">
     <h2 class="panel-title collapsible-title" data-target="swotBody">7. EA SWOT 分析 <span class="toggle-icon">－</span></h2>
     <div id="swotBody">
-      <div id="swotSection">
-        <div id="swotBody2" class="swot-grid">
-          <div class="swot-card swot-s">
-            <h4 id="swotST">💪 Strengths</h4>
-            <div id="swotS"></div>
-          </div>
-          <div class="swot-card swot-w">
-            <h4 id="swotSW">⚠️ Weaknesses</h4>
-            <div id="swotW"></div>
-          </div>
-          <div class="swot-card swot-o">
-            <h4 id="swotOT">🚀 Opportunities</h4>
-            <div id="swotO"></div>
-          </div>
-          <div class="swot-card swot-t">
-            <h4 id="swotOW">🛡️ Threats</h4>
-            <div id="swotT"></div>
-          </div>
+      <div class="swot-grid">
+        <div class="swot-card swot-s">
+          <h4 id="swotST">💪 Strengths</h4>
+          <div id="swotS"></div>
+        </div>
+        <div class="swot-card swot-w">
+          <h4 id="swotSW">⚠️ Weaknesses</h4>
+          <div id="swotW"></div>
+        </div>
+        <div class="swot-card swot-o">
+          <h4 id="swotOT">🚀 Opportunities</h4>
+          <div id="swotO"></div>
+        </div>
+        <div class="swot-card swot-t">
+          <h4 id="swotOW">🛡️ Threats</h4>
+          <div id="swotT"></div>
         </div>
       </div>
     </div>
