@@ -101,6 +101,26 @@ const EA_RULES = {
     style: "generic-martin",
     comment:
       "未指定分類但有馬丁 / 加倉特性，建議以最大回撤與層數作主要風險指標。"
+  },
+
+  Martin: {
+    key: "Martin",
+    name: "Martin (Standard)",
+    martin: true,
+    riskLevel: "very-high",
+    style: "martingale",
+    comment:
+      "純馬丁格爾加倉策略，層數越深風險越高，必須嚴格設定最大層數及最大回撤限制。"
+  },
+
+  Martin_Pro: {
+    key: "Martin_Pro",
+    name: "Martin Pro",
+    martin: true,
+    riskLevel: "extreme",
+    style: "martingale-aggressive",
+    comment:
+      "進階馬丁格爾策略，加倍倍數與頻率更高，適合高風險承受帳戶，需配合資金管理。"
   }
 };
 
