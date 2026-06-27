@@ -1312,7 +1312,7 @@ document.addEventListener("click", (e) => {
 
 // ================== PART 3: EA 規則 + SWOT ==================
 
-const EA_RULES = {
+const _EA_RULES = {
   SMA: {
     key: "SMA",
     name: "SMA Trend EA",
