@@ -680,7 +680,7 @@ function renderSymbol(symbol) {
   const stats = buildStats(trades);
   renderSymbolStats(stats);
 
-  const rule = EA_RULES[globalEAKey] || EA_RULES.OtherBasic;
+  const rule = SWOT_THRESHOLDS[globalEAKey] || EA_RULES.OtherBasic;
   const eaTag = document.getElementById("eaTag");
   if (eaTag)
     eaTag.textContent =
@@ -1312,7 +1312,7 @@ document.addEventListener("click", (e) => {
 
 // ================== PART 3: EA 規則 + SWOT ==================
 
-const _EA_RULES = {
+const SWOT_THRESHOLDS = {
   SMA: {
     key: "SMA",
     name: "SMA Trend EA",
@@ -1411,7 +1411,7 @@ function winRateNotHigh(winRate, rule) {
 }
 
 function buildSwotForEA(eaKey, symbol, stats, martinSummary) {
-  const rule = EA_RULES[eaKey] || EA_RULES.OtherBasic;
+  const rule = SWOT_THRESHOLDS[eaKey] || EA_RULES.OtherBasic;
   const trades =
     symbol === "ALL" ? globalTrades : globalBySymbol[symbol] || [];
 
@@ -2148,7 +2148,7 @@ function winRateNotHigh(winRate, rule) {
 }
 
 function buildSwotForEA(eaKey, symbol, stats, martinSummary) {
-  const rule = EA_RULES[eaKey] || EA_RULES.OtherBasic;
+  const rule = SWOT_THRESHOLDS[eaKey] || EA_RULES.OtherBasic;
   const trades =
     symbol === "ALL" ? globalTrades : globalBySymbol[symbol] || [];
 
