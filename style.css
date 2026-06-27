@@ -307,8 +307,8 @@ button {
 
 .collapsible-body {
   margin-top: 12px;
-  max-height: 9999px;
-  overflow: hidden;
+  max-height: none;
+  overflow: visible;
   transition: max-height 0.24s ease;
 }
 
@@ -371,7 +371,7 @@ button {
   border-radius: 999px;
   background: #e5e7eb;
   height: 6px;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .bar-fill {
