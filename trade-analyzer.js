@@ -2082,41 +2082,6 @@ document.addEventListener("click", (e) => {
   }
 });
 
-// ================== PART 3: EA 規則 + SWOT ==================
-
-const EA_RULES = {
-  SMA: {
-    key: "SMA",
-    name: "SMA Trend EA",
-    description: "以均線為主的順勢策略，偏中長線 Trending。",
-    goodWinRate: 0.55,
-    greatWinRate: 0.6,
-    weakWinRate: 0.45,
-    goodPF: 1.5,
-    greatPF: 2.0,
-    weakPF: 1.0,
-    safeDD: 0.1,
-    warnDD: 0.2,
-    minTradesForConfidence: 50,
-    martin: true
-  },
-  OtherBasic: {
-    key: "OtherBasic",
-    name: "EA (General)",
-    description: "一般型 EA，使用通用評估標準。",
-    goodWinRate: 0.55,
-    greatWinRate: 0.6,
-    weakWinRate: 0.45,
-    goodPF: 1.4,
-    greatPF: 1.8,
-    weakPF: 1.0,
-    safeDD: 0.12,
-    warnDD: 0.22,
-    minTradesForConfidence: 30,
-    martin: false
-  }
-};
-
 function buildEaStats(symbol, stats, martinSummary, trades) {
   const netProfit = stats.grossProfit - stats.grossLoss;
   const totalTrades = stats.totalTrades || 0;
