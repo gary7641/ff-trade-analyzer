@@ -289,7 +289,7 @@ document.addEventListener("click", (e) => {
     body.style.maxHeight = "0px";
     if (btn) btn.textContent = "＋";
   } else {
-    body.style.maxHeight = body.scrollHeight + "px";
+    body.style.maxHeight = "none"; body.style.overflow = "visible";
     if (btn) btn.textContent = "－";
   }
 });
@@ -298,7 +298,7 @@ function expandBody(id) {
   const body = document.getElementById(id);
   if (!body) return;
   body.classList.remove("collapsed");
-  body.style.maxHeight = body.scrollHeight + "px";
+  body.style.maxHeight = "none"; body.style.overflow = "visible";
 }
 
 // ---------- 總流程 / RESET ----------
@@ -324,7 +324,7 @@ function buildAll() {
   renderSymbolMiniCharts();
   expandBody("symbolBody");
 
-  renderSymbol("ALL");
+  renderSymbol("ALL");   const nav = document.getElementById("sectionNav");   if (nav) nav.style.display = "flex";
 }
 
 function resetView() {
@@ -629,7 +629,7 @@ function renderSymbolButtons() {
       b.classList.remove("active")
     );
     allBtn.classList.add("active");
-    renderSymbol("ALL");
+    renderSymbol("ALL");   const nav = document.getElementById("sectionNav");   if (nav) nav.style.display = "flex";
   };
   container.appendChild(allBtn);
 
