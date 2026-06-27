@@ -772,4 +772,65 @@ button {
       "ow";
     grid-template-columns: 1fr;
   }
+
+/* ========== SECTION NAV ========== */
+.section-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 10px 20px;
+  background: var(--bg-panel);
+  border-bottom: 1px solid var(--border-soft);
+  position: sticky;
+  top: 56px;
+  z-index: 15;
+}
+.section-nav a {
+  text-decoration: none;
+  color: var(--accent-cyan);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--accent-cyan);
+  transition: background 0.15s, color 0.15s;
+}
+.section-nav a:hover {
+  background: var(--accent-cyan);
+  color: #fff;
+}
+
+/* ========== SWOT GRID ========== */
+.swot-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 12px;
+}
+.swot-card {
+  border-radius: 12px;
+  padding: 14px 16px;
+  background: var(--bg-panel-soft);
+  border: 1px solid var(--border-soft);
+}
+.swot-card h4 {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  font-weight: 700;
+}
+.swot-s h4 { color: var(--accent-green); }
+.swot-w h4 { color: var(--accent-red); }
+.swot-o h4 { color: var(--accent-cyan); }
+.swot-t h4 { color: #f59e0b; }
+.swot-card ul {
+  margin: 0;
+  padding-left: 16px;
+  font-size: 13px;
+  line-height: 1.7;
+}
+@media (max-width: 640px) {
+  .swot-grid {
+    grid-template-columns: 1fr;
+  }
+}
 }
